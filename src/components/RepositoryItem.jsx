@@ -29,11 +29,12 @@ const styles = StyleSheet.create({
   },
   statsContainer: {
     flexDirection: 'row',
-    marginLeft: 70
+    marginLeft: 70,
   },
   statsInfo: {
     alignItems: 'center',
-    marginRight: 30
+    marginRight: 30,
+    marginBottom: 10
   },
 });
 
