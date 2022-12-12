@@ -26,27 +26,6 @@ export const GET_REPOSITORIES = gql`
   }
 `;
 
-/*
-{
-  repositories(first: 2) {
-    totalCount
-    edges {
-      node {
-        id
-        fullName
-        createdAt
-      }
-      cursor
-    }
-    pageInfo {
-      endCursor
-      startCursor
-      hasNextPage
-    }
-  }
-}
-*/
-
 export const GET_USER = gql`
   query GetCurrentUser {
     me {
