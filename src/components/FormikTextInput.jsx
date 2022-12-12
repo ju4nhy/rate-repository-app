@@ -8,7 +8,8 @@ const styles = StyleSheet.create({
   input: {
     margin: 10,
     padding: 10,
-    borderWidth: 1
+    borderWidth: 1,
+    backgroundColor: '#FFF',
   },
   errorStyle: {
     margin: 10,

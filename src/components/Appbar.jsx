@@ -1,18 +1,19 @@
 import { useQuery, useApolloClient } from '@apollo/client';
 import { View, StyleSheet, Pressable, ScrollView } from 'react-native';
-import { Link } from "react-router-native";
+import { Link, useNavigate } from "react-router-native";
 import Constants from 'expo-constants';
 import Text from "./Text";
 import theme from './theme';
-import { GET_USER } from '../graphql/queries'
 import useAuthStorage from "../hooks/useAuthStorage";
+import { GET_USER } from '../graphql/queries'
+
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: theme.colors.appBar,
     paddingTop: Constants.statusBarHeight,
-    marginBottom: 15,
+    paddingBottom: 5,
   },
   text: {
     color: theme.colors.textWhite,
@@ -49,6 +50,7 @@ const SignOutButton = (props) => {
 const AppBar = () => {
   const apolloClient = useApolloClient();
   const authStorage = useAuthStorage();
+  const navigate = useNavigate();
 
   const { data } = useQuery(GET_USER)
 
@@ -57,6 +59,7 @@ const AppBar = () => {
   const signOut = async () => {
     await authStorage.removeAccessToken();
     apolloClient.resetStore();
+    navigate('/');
   }
 
   return (
@@ -65,6 +68,8 @@ const AppBar = () => {
            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
              <AppBarTab to="/" title="Repositories" />
              {!isLoggedIn && <AppBarTab to="signin" title="Sign in" />}
+             {!isLoggedIn && <AppBarTab to="signup" title="Sign up" />}
+             {isLoggedIn && <AppBarTab to="review" title="Create a review" />}
              {isLoggedIn && <SignOutButton to="/" signOut={signOut} title="Sign out"/> }
            </ScrollView>
         </View>
