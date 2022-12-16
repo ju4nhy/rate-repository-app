@@ -1,5 +1,5 @@
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { SignInContainer } from '../components/SignIn';
+import { SignInContainer } from '../../components/SignIn';
 
 describe('SignIn', () => {
   describe('SignInContainer', () => {

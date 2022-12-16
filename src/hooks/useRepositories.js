@@ -1,27 +1,45 @@
 import { useQuery } from '@apollo/client';
 import { GET_REPOSITORIES } from '../graphql/queries';
 
-const useRepositories = (orderBy, orderDirection, filter) => {
+const useRepositories = ({ first, orderBy, orderDirection, filter }) => {
   let order = orderBy
 
   if(orderBy === "RATING_AVERAGE_DESC") order = orderBy.slice(0, -5);
   if(orderBy === "RATING_AVERAGE_ASC") order = orderBy.slice(0, -4);
 
-  const { data, error, loading } = useQuery(GET_REPOSITORIES, { 
+  const { data, loading, fetchMore, ...result } = useQuery(GET_REPOSITORIES, { 
       fetchPolicy: 'cache-and-network',
-      variables: { 
-        orderBy: order, 
-        orderDirection: orderDirection, 
+      variables: {
+        first: first,
+        orderBy: order,
+        orderDirection: orderDirection,
         searchKeyword: filter,
       }
   });
 
- if (error) return `Error! ${error}`;
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
 
- return {
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        first: first, 
+        orderBy: order,
+        orderDirection: orderDirection,
+        searchKeyword: filter,
+      },
+    });
+  };
+
+return {
     repositories: data && data.repositories,
-    error,
+    fetchMore: handleFetchMore,
     loading,
+    ...result
   };
 }
 

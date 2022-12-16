@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Platform, View, Pressable, FlatList, StyleSheet } from 'react-native';
+import { Platform, View, FlatList, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import RepositoryItem from './RepositoryItem';
 import ItemSeparator from './ItemSeparator';
@@ -57,7 +57,7 @@ const SortingMenu = ({ selected, setSelected, setOrderBy, setOrderDirection }) =
   )
 }
 
-export const RepositoryListContainer = ({ repositories, setOrderBy, setOrderDirection, searchKeyword, setSearchKeyword, onChangeSearch }) => {
+export const RepositoryListContainer = ({ repositories, onEndReach, setOrderBy, setOrderDirection, searchKeyword, onChangeSearch }) => {
   const repositoryNodes = repositories ? repositories.edges.map((edge) => edge.node) : [];  // Get the nodes from the edges array
   const [selected, setSelected] = useState();
 
@@ -76,6 +76,8 @@ export const RepositoryListContainer = ({ repositories, setOrderBy, setOrderDire
             onChangeSearch={onChangeSearch}
           />
         }
+        onEndReached={onEndReach}
+        onEndReachedThreshold={0.5}
         ListFooterComponent={ItemFooter}
       />
   );
@@ -88,9 +90,19 @@ const RepositoryList = () => {
 
   const [filter] = useDebounce(searchKeyword, 400);
 
-  const { repositories } = useRepositories(orderBy, orderDirection, filter);
-
+  const { repositories, fetchMore } = useRepositories({ 
+    first: 4,
+    orderBy,
+    orderDirection,
+    filter
+  });
+  
   const onChangeSearch = query => setSearchKeyword(query);
+
+  const onEndReach = () => {
+    fetchMore();
+    console.log('You have reached the end of the list');
+  };
   
   return(
     <RepositoryListContainer 
@@ -100,6 +112,7 @@ const RepositoryList = () => {
       searchKeyword={searchKeyword} 
       setSearchKeyword={setSearchKeyword}
       onChangeSearch={onChangeSearch}
+      onEndReach={onEndReach}
     />
   ) 
 };

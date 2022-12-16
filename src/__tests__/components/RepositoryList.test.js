@@ -1,6 +1,7 @@
-import { render, fireEvent } from '@testing-library/react-native';
-import { RepositoryListContainer } from '../components/RepositoryList';
-import { formatNumberSuffix } from '../components/RepositoryItem';
+import { NativeRouter } from 'react-router-native';
+import { render } from '@testing-library/react-native';
+import { RepositoryListContainer } from '../../components/RepositoryList';
+import { formatNumberSuffix } from '../../components/RepositoryItem';
 
 describe('RepositoryList', () => {
   describe('RepositoryListContainer', () => {
@@ -48,7 +49,14 @@ describe('RepositoryList', () => {
         ],
       };
 
-      const { getAllByTestId } = render(<RepositoryListContainer repositories={repositories} />);
+
+      const { getAllByTestId } = render(
+        // useNavigate error without NativeRouter
+        <NativeRouter> 
+          <RepositoryListContainer repositories={repositories} /> 
+        </NativeRouter>
+      );
+
       const repositoryItems = getAllByTestId('repositoryItem');
       
       expect(repositoryItems).toHaveLength(2);

@@ -1,4 +1,4 @@
-import { Pressable, View, StyleSheet } from 'react-native';
+import { Pressable, View, StyleSheet, Alert } from 'react-native';
 import { useNavigate } from "react-router-native";
 import { Formik } from 'formik';
 import Text from './Text'
@@ -45,7 +45,7 @@ const validationSchema = yup.object().shape({
 });
 
 export const ReviewForm = ({ onSubmit }) => {
-  return (                                                        
+  return (                                                    
     <View>
       <FormikTextInput name="ownerName" placeholder="Repository owner name" /> 
       <FormikTextInput name="repositoryName" placeholder="Repository name" />
@@ -70,6 +70,15 @@ const Review = () => {
   const [review] = useReview();
   const navigate = useNavigate();
 
+  const duplicateAlert = () =>
+    Alert.alert(
+      "Review",
+      "You have already reviewed this repository or repository does not exist",
+      [
+        { text: "OK", onPress: () => console.log('OK') }
+      ]
+  );
+
   const onSubmit = async (values) => {
       const { ownerName, repositoryName, rating, text } = values;
 
@@ -79,6 +88,7 @@ const Review = () => {
         data ? navigate(`/${id}`, { replace: true }) : null;
       } catch (e) {
         console.log(e);
+        duplicateAlert();
       }
   };
 
